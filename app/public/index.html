@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRB Analysis System</title>
+    <title>SRB Exam</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .box { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
-        select, input { padding: 8px; margin: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
+        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #f4f4f9; }
+        .card { background: white; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        select, button { padding: 10px; margin: 5px 0; font-size: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #007bff; color: white; }
     </style>
 </head>
 <body>
-    <h1>Sex Ratio at Birth (SRB) Analysis</h1>
+    <h1>SRB Data Analysis System</h1>
 
-    <div class="box">
-        <h2>Feature 1: View SRB by Country</h2>
-        <label>Select Country:</label>
-        
-        <select name="countryCode" 
-                hx-get="/api/countries" 
-                hx-trigger="load" 
-                hx-target="this" 
-                hx-swap="innerHTML"
-                hx-on:change="htmx.trigger('#srb-table', 'updateData')">
-                <option>Loading...</option>
-        </select>
+    <div class="card">
+        <h2>1. View SRB by Country</h2>
+        <label>Country:</label>
+        <select name="code" hx-get="/api/countries" hx-trigger="load" hx-target="this" 
+                hx-on:change="htmx.trigger('#res1', 'update')"></select>
+        <div id="res1" hx-get="/api/srb" hx-include="[name='code']" hx-trigger="update"></div>
+    </div>
 
-        <div id="srb-table"
-             hx-get="/api/srb"
-             hx-include="[name='countryCode']"
-             hx-trigger="updateData"
-             hx-target="this">
-             </div>
+    <div class="card">
+        <h2>2. Compare Countries in Sub-Region</h2>
+        <form hx-get="/api/srb/subregion" hx-target="#res2">
+            <label>Sub-Region:</label>
+            <select name="subRegionCode" hx-get="/api/subregions" hx-trigger="load"></select>
+            
+            <label>Year:</label>
+            <select name="year" hx-get="/api/years" hx-trigger="load"></select>
+            
+            <button type="submit">Search</button>
+        </form>
+        <div id="res2"></div>
     </div>
 
 </body>
