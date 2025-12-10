@@ -7,6 +7,11 @@
 
 ## Task 1: GitHub Repository
 This repository contains the complete source code, database scripts, and documentation for the final exam project.
+**Project Structure:**
+- `/app`: Node.js Express Application (Source Code)
+- `/db`: Database initialization files
+- `compose.yaml`: Docker Compose configuration
+- `ETL.sql`: SQL scripts for table creation and data ETL
 
 ## Task 2: Database Design & Normalization (ER Model)
 The database is designed based on the provided `data1.csv` and `data2.csv` files. It follows the **3rd Normal Form (3NF)** logic by separating the geographical hierarchy found in `data2.csv` into distinct entities (`Regions`, `SubRegions`, `IntermediateRegions`) to eliminate data redundancy.
