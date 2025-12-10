@@ -2,41 +2,47 @@
 
 ## Student Information
 - **ID:** M11405105
-- **Name:** LEE SHING RONG
+- **Name:** Lee Shing Rong
 - **Department:** NTUST CT
 
-## Project Overview
-This project is a 3-tier web application for analyzing **Sex Ratio at Birth (SRB)** data globally. It demonstrates database normalization (3NF), ETL processes, and containerized deployment.
+## Task 1: GitHub Repository
+This repository contains the complete source code, database scripts, and documentation for the final exam project.
 
-## 1. ER Diagram (Database Design)
-The database is designed to conform to the **3rd Normal Form (3NF)** with 4 entities:
+## Task 2: Database Design & Normalization (ER Model)
+The database is designed to conform to the **3rd Normal Form (3NF)**. It consists of **4 entities** to ensure data integrity and eliminate redundancy.
 
+### ER Diagram (Mermaid Syntax)
 ```mermaid
 erDiagram
+    %% Entity 1: Regions (Highest level)
+    Regions {
+        int RegionCode PK "Unique ID from OWID data"
+        string RegionName "e.g., Asia, Europe"
+    }
+
+    %% Entity 2: SubRegions (Belongs to Regions)
+    SubRegions {
+        int SubRegionCode PK "Unique ID from OWID data"
+        string SubRegionName "e.g., Southern Asia"
+        int RegionCode FK "Links to Regions"
+    }
+
+    %% Entity 3: Countries (Belongs to SubRegions)
+    Countries {
+        string CountryCode PK "ISO Alpha-3 Code (e.g., AFG)"
+        string CountryName "Official Name"
+        int SubRegionCode FK "Links to SubRegions"
+    }
+
+    %% Entity 4: Annual SRB Data (The Facts)
+    AnnualSRB {
+        int ID PK "Auto-increment key"
+        string CountryCode FK "Links to Countries"
+        int Year "Data Year"
+        decimal SRB "Sex Ratio at Birth Value"
+    }
+
+    %% Relationships
     Regions ||--|{ SubRegions : contains
     SubRegions ||--|{ Countries : contains
-    Countries ||--|{ AnnualSRB : has_data
-
-    Regions {
-        int RegionCode PK "ISO Region Code"
-        string RegionName
-    }
-
-    SubRegions {
-        int SubRegionCode PK "ISO Sub-Region Code"
-        string SubRegionName
-        int RegionCode FK
-    }
-
-    Countries {
-        char(3) CountryCode PK "ISO Alpha-3 Code"
-        string CountryName
-        int SubRegionCode FK
-    }
-
-    AnnualSRB {
-        int ID PK
-        char(3) CountryCode FK
-        int Year
-        decimal SRB "Sex Ratio at Birth"
-    }
+    Countries ||--|{ AnnualSRB : has_records
