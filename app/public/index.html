@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRB Analysis System</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .box { border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        select, input { padding: 8px; margin: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Sex Ratio at Birth (SRB) Analysis</h1>
+
+    <div class="box">
+        <h2>Feature 1: View SRB by Country</h2>
+        <label>Select Country:</label>
+        
+        <select name="countryCode" 
+                hx-get="/api/countries" 
+                hx-trigger="load" 
+                hx-target="this" 
+                hx-swap="innerHTML"
+                hx-on:change="htmx.trigger('#srb-table', 'updateData')">
+                <option>Loading...</option>
+        </select>
+
+        <div id="srb-table"
+             hx-get="/api/srb"
+             hx-include="[name='countryCode']"
+             hx-trigger="updateData"
+             hx-target="this">
+             </div>
+    </div>
+
+</body>
+</html>
