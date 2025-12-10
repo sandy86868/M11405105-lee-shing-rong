@@ -9,7 +9,7 @@
         body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #f4f4f9; }
         .card { background: white; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         h2 { margin-top: 0; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-        select, button { padding: 10px; margin: 5px 0; font-size: 16px; width: 100%; box-sizing: border-box; } /* 加了一點寬度調整 */
+        select, button { padding: 10px; margin: 5px 0; font-size: 16px; width: 100%; box-sizing: border-box; }
         label { font-weight: bold; margin-top: 10px; display: block; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
@@ -35,7 +35,6 @@
     <div class="card">
         <h2>2. Compare Countries in Sub-Region</h2>
         <form hx-get="/api/srb/subregion" hx-target="#res2">
-            
             <label>Sub-Region:</label>
             <select name="subRegionCode" 
                     hx-get="/api/subregions" 
@@ -43,7 +42,6 @@
                     hx-target="this">
                 <option value="">Loading sub-regions...</option>
             </select>
-            
             <label>Year:</label>
             <select name="year" 
                     hx-get="/api/years" 
@@ -51,14 +49,11 @@
                     hx-target="this">
                 <option value="">Loading years...</option>
             </select>
-            
             <button type="submit" style="margin-top: 15px; cursor: pointer; background-color: #28a745; color: white; border: none;">
                 Search
             </button>
         </form>
-        
         <div id="res2"></div>
     </div>
-
 </body>
 </html>

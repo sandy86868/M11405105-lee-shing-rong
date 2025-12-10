@@ -7,12 +7,13 @@ services:
       POSTGRES_PASSWORD: password123
       POSTGRES_DB: srb_db
     volumes:
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # 關鍵修改：左邊改成 ETL.sql，右邊保持原樣 (Docker 會自動執行這個資料夾下的所有 .sql)
+      - ./ETL.sql:/docker-entrypoint-initdb.d/ETL.sql
       - ./data:/data
     ports:
       - "5432:5432"
 
-  # 2. 網頁應用程式 (這一塊是你原本缺少的)
+  # 2. 網頁應用程式
   app:
     build: ./app
     ports:
