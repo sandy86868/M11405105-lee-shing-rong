@@ -3,57 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SRB Exam</title>
+    <title>SRB Analysis System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; background: #f4f4f9; }
-        .card { background: white; border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
-        select, button { padding: 10px; margin: 5px 0; font-size: 16px; width: 100%; box-sizing: border-box; }
-        label { font-weight: bold; margin-top: 10px; display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background-color: #007bff; color: white; }
-    </style>
 </head>
-<body>
-    <h1>SRB Data Analysis System</h1>
+<body class="container py-4">
 
-    <div class="card">
-        <h2>1. View SRB by Country</h2>
-        <label>Country:</label>
-        <select name="code" 
-                hx-get="/api/countries" 
-                hx-trigger="load" 
-                hx-target="this" 
-                hx-on:change="htmx.trigger('#res1', 'update')">
-            <option>Loading countries...</option>
-        </select>
-        <div id="res1" hx-get="/api/srb" hx-include="[name='code']" hx-trigger="update"></div>
-    </div>
+    <header class="mb-4 border-bottom">
+        <h1>Global SRB Data Management</h1>
+        <p class="lead">Final Exam Project - M11405105</p>
+    </header>
 
-    <div class="card">
-        <h2>2. Compare Countries in Sub-Region</h2>
-        <form hx-get="/api/srb/subregion" hx-target="#res2">
-            <label>Sub-Region:</label>
-            <select name="subRegionCode" 
-                    hx-get="/api/subregions" 
-                    hx-trigger="load" 
-                    hx-target="this">
-                <option value="">Loading sub-regions...</option>
-            </select>
-            <label>Year:</label>
-            <select name="year" 
-                    hx-get="/api/years" 
-                    hx-trigger="load" 
-                    hx-target="this">
-                <option value="">Loading years...</option>
-            </select>
-            <button type="submit" style="margin-top: 15px; cursor: pointer; background-color: #28a745; color: white; border: none;">
-                Search
-            </button>
+    <div class="mb-4 p-4 border rounded bg-light shadow-sm">
+        <h4 class="mb-3 text-primary"><i class="bi bi-plus-circle"></i> Add New Country</h4>
+        <form hx-post="/api/countries" hx-target="#add-result">
+            <div class="row g-3">
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Alpha-3 Code</label>
+                    <input type="text" name="code" class="form-control" placeholder="e.g. TWN" required maxlength="3">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Country Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="e.g. Taiwan" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Alpha-2</label>
+                    <input type="text" name="alpha2" class="form-control" placeholder="e.g. TW" maxlength="2">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">ISO 3166-2</label>
+                    <input type="text" name="iso" class="form-control" placeholder="e.g. ISO-TW">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Sub-Region</label>
+                    <select name="subregion" class="form-select" 
+                            hx-get="/api/subregions-options" 
+                            hx-trigger="load">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-success">Create Country</button>
+                </div>
+            </div>
         </form>
-        <div id="res2"></div>
+        <div id="add-result" class="mt-3"></div>
     </div>
+
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Countries List</h3>
+                <input type="text" 
+                       id="search-input"
+                       class="form-control" 
+                       name="keyword" 
+                       placeholder="Type to search countries..." 
+                       hx-get="/api/countries" 
+                       hx-trigger="keyup changed delay:500ms, load" 
+                       hx-target="#country-list">
+            </div>
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div style="height: 500px; overflow-y: auto; border: 1px solid #dee2e6;">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark sticky-top">
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th style="width: 100px;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="country-list">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div id="srb-results" class="p-4 border rounded bg-light h-100">
+                <div class="text-center text-muted mt-5">
+                    <h5>Waiting for selection...</h5>
+                    <p>Click "View Data" button on the left to see details.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
